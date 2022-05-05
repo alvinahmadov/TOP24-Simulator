@@ -1,0 +1,111 @@
+### Get authorization and refresh tokens
+POST {{host}}/api/admin/hostlogin
+Content-Type: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+> {%
+	client.global.set("auth_token", response.body['accessToken']);
+	client.global.set("ref_token", response.body['refreshToken']);
+%}
+
+### Refresh authorization token
+POST {{host}}/api/admin/refresh
+Authorization: {{ref_token}}
+Content-Type: application/json
+
+> {% client.global.set("auth_token", response.body['accessToken'])%}
+
+### Get admins if no id supplied else get single admin
+GET {{host}}/api/admin
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Register to the service
+POST {{host}}/api/admin
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"name": "Alvin",
+	"phone": "{{user_phone}}",
+	"email": "{{user_mail}}",
+	"type": 1
+}
+
+> {%
+		client.global.set("user_id", response.body['id'])
+		client.global.set("user_phone", response.body['phone'])
+ %}
+
+### Login to service
+POST {{host}}/api/admin/login
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Request verification code to signin by phone number
+POST {{host}}/api/admin/signin?by=phone
+Content-Type: application/json
+
+{
+	"phone": "{{user_phone}}"
+}
+
+> {% client.global.set("code", response.body['code']) %}
+
+### Submit signin by supplying verification code
+POST {{host}}/api/admin/signin?by=phone
+Content-Type: application/json
+
+{
+	"phone": "{{user_phone}}",
+	"code": "{{code}}"
+}
+
+> {%
+	client.global.set("auth_token", response.body['accessToken'])
+	client.global.set("ref_token", response.body['refreshToken'])
+	client.global.set("user_id", response.body['user']['id'])
+%}
+
+### Request verification code to signin by email
+POST {{host}}/api/admin/signin?by=email
+Content-Type: application/json
+
+{
+	"email": "{{user_mail}}"
+}
+
+> {% client.global.set("code", response.body['code']) %}
+
+### Submit signin by supplying verification code
+POST {{host}}/api/admin/signin?by=email
+Content-Type: application/json
+
+{
+	"email": "{{user_mail}}",
+	"code": "{{code}}"
+}
+
+> {%
+	client.global.set("auth_token", response.body['accessToken'])
+	client.global.set("ref_token", response.body['refreshToken'])
+	client.global.set("user_id", response.body['user']['id'])
+%}
+
+### Update admin information
+PUT {{host}}/api/admin/{{user_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"name": "User"
+}
+
+### Delete admin
+DELETE {{host}}/api/admin/{{user_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json

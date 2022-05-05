@@ -1,0 +1,209 @@
+### Get list of orders
+GET {{host}}/api/order?order=status
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+
+### Get orders with specified filters
+GET {{host}}/api/order?full=true
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"is_free": true,
+	"is_open": true
+}
+
+### Get orders with specified filters
+GET {{host}}/api/order
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get concrete order
+GET {{host}}/api/order/5b2ffda5-8ccc-420f-a974-f68622769ca0
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Send order to bitrix
+GET {{host}}/api/order/send/{{order_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get cargo list
+GET {{host}}/api/order/cargolist/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Create order
+POST {{host}}/api/order
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"cargoId": "{{cargo_id}}",
+	"title": "Заявка №1",
+	"payload": "Автомобиль",
+	"payload_type": "ADR2",
+	"loading_type": 2,
+	"status": 0,
+	"payment_type": "НДС 20%",
+	"price": 200000,
+	"weight": 7.8,
+	"volume": 6,
+	"length": 1.9,
+	"width": 1.6,
+	"height": 3.8,
+	"palets": 5,
+	"is_bid": true,
+	"bid_price": 22000,
+	"bid_price_max": 25000,
+	"comments": "Комментарии к заявке",
+	"load_addr_a": "ул. Чехова 15, Москва",
+	"load_date_a": "2022-02-05T11:53:34.396Z",
+	"unload_addr_a": "Молодёжная 3, село Высокиничи, Жуковский район, Калужская область",
+	"unload_date_a": "2022-02-06T11:53:34.396Z"
+	}
+
+> {% client.global.set('order_id', response.body['id']) %}
+
+### Update order by id
+PUT {{host}}/api/order/{{order_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"cargoId": "{{cargo_id}}",
+	"title": "Order №1",
+	"number": "100000",
+	"status": "FREE",
+	"is_open": true,
+	"price": 21000,
+	"length": 4.5,
+	"width": 2.9,
+	"height": 1.0,
+	"cancel_cause": "Отказал транспорт",
+	"is_canceled": true
+}
+
+### Upload shipping document
+POST {{host}}/api/order/shipping/{{order_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="order_shipping.png"
+
+< /home/alvin/Pictures/24top.png
+--WebAppBoundary--
+
+### Upload payment documents
+POST {{host}}/api/order/payment/{{order_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="order_payment.png"
+
+< /home/alvin/Pictures/24top.png
+--WebAppBoundary--
+
+### Delete order by id
+DELETE {{host}}/api/order/{{order_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Order driver associations
+
+### Get list of associations
+GET {{host}}/api/order_association
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get list of associations
+PUT {{host}}/api/order_association/1d35e02b-7d1e-433e-97ae-c5d9ed9b8dec
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"order_status": 0
+}
+
+### Get association
+GET {{host}}/api/order_association/1fdae67a-af42-4722-845a-2f13729a2080
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get order assigned drivers
+GET {{host}}/api/order_association/order/{{order_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"order_status": 1
+}
+
+### Get order assigned drivers
+GET {{host}}/api/order_association/driver/44ddeb8a-4449-4d0c-bfee-e922aab11a01
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+###
+GET http://51.250.65.72/api/order_association/order/20611402-e3a5-4420-bd2e-0f8e589b911d
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"order_status": 1
+}
+
+
+### Get order assigned drivers
+GET {{host}}/api/order_association/transport/{{order_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"order_status": 1,
+	"transport_status": 1
+}
+
+### Cancel order from driver
+PATCH {{host}}/api/order_association/cancel/1fdae67a-af42-4722-845a-2f13729a2080
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Associate driver with order
+POST {{host}}/api/order_association/{{order_id}}/{{driver_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Associate drivers with order
+POST {{host}}/api/order_association/drivers/{{order_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"drivers": [
+		{
+			"driverId": "cc75f310-9a3e-425d-aa76-7f6031d2af77",
+			"order_status": 1,
+			"comments": "Some test comment"
+		},
+		{
+			"driverId": "44ddeb8a-4449-4d0c-bfee-e922aab11a01",
+			"order_status": 1,
+			"comments": "Some test comment"
+		}
+	]
+}
+
+### Send contract scan
+POST {{host}}/api/order_association/contract/1fdae67a-af42-4722-845a-2f13729a2080
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="github_PNG20.png"
+
+< /home/alvin/Pictures/github_PNG20.png
+--WebAppBoundary--

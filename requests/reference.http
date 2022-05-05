@@ -1,0 +1,39 @@
+### Get addresses
+GET {{host}}/api/reference/address?from=0&count=20
+Content-Type: application/json
+
+### Search by some word
+GET {{host}}/api/reference/address?search=мос&from=0&count=100
+Content-Type: application/json
+
+### Search by some word
+GET {{host}}/api/reference/auto_types
+Content-Type: application/json
+
+### Search by some word
+GET {{host}}/api/reference/auto_types?from=0&count=10
+Content-Type: application/json
+
+### Get payloads
+GET {{host}}/api/reference/payloads
+Content-Type: application/json
+
+### Get payloads
+GET {{host}}/api/reference/payloads?from=0&count=10
+Content-Type: application/json
+
+### Get risk classes
+GET {{host}}/api/reference/risk_classes
+Content-Type: application/json
+
+### Get risk classes
+GET {{host}}/api/reference/risk_classes?from=0&count=10
+Content-Type: application/json
+
+### Get loading types
+GET {{host}}/api/reference/loading_types
+Content-Type: application/json
+
+### Get loading types
+GET {{host}}/api/reference/loading_types?from=0&count=10
+Content-Type: application/json

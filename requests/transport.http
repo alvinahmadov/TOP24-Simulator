@@ -1,0 +1,122 @@
+### Get all transports
+GET {{host}}/api/transport
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get single transport with given `transport_id`
+GET {{host}}/api/transport/driver/{{driver_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get single transport with given `transport_id`
+GET {{host}}/api/transport/{{transport_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get list of transports with given `driverId` and applied filters
+GET {{host}}/api/transport/driver/079c30e4-db63-434f-9bdf-10203d7b45d2
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"status": 1, <<<<
+	"weight_min": 0,
+	"weight_max": 15,
+	"volume_min": 0,
+	"volume_max": 20,
+	"length_min": 0,
+	"length_max": 25,
+	"width_min": 0,
+	"width_max": 10,
+	"height_min": 0,
+	"height_max": 10,
+	"payload": "Бумага",
+	"type": "Самосвал",
+	"loadtype": 3
+}
+
+
+### Get list of transports that belong to cargo company
+### that satisfies to physical parameters in body (not required)
+GET {{host}}/api/transport?from=0&count=10&full=true
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Create new transport record
+POST {{host}}/api/transport
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"cargoId": "{{cargo_id}}",
+	"brand": "DAHAN",
+	"model": "R 730 V8 6x2",
+	"registr_num": "4 354 35 435",
+	"prod_year": "2020",
+	"payload": "Стекло",
+	"sts": "23 43 243254",
+	"weight": 12.5,
+	"volume": 10.3,
+	"length": 5,
+	"width": 3,
+	"height": 5,
+	"loadtype": [
+		1,
+		2
+	],
+	"dopinfo": "",
+	"osago_number": "345 4354354354",
+	"osago_date": 1702332000000,
+	"diag_num": "35435435454354444444",
+	"diag_date": 1923256800000,
+	"type": "Изотермический",
+	"level": "2",
+	"comments": ""
+}
+
+### Get single transport with given `transport_id`
+POST {{host}}/api/transport/image/0fbece36-ea94-4d4f-925e-357974729a9e
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="github_PNG20.png"
+
+< /home/alvin/Pictures/github_PNG20.png
+--WebAppBoundary--
+
+### Update single transport data with given `transport_id`
+PUT {{host}}/api/transport/c40c5535-0f2a-43a4-a2ef-7c95a1abbb3e
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"status": 0
+}
+
+### Delete transport record
+DELETE {{host}}/api/transport/{{transport_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Send passport scan
+POST {{host}}/api/transport/diag/{{transport_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="24top.png"
+
+< /home/alvin/Pictures/24top.png
+--WebAppBoundary--
+
+### Send passport scan
+POST {{host}}/api/transport/osago/{{transport_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="24top.png"
+
+< /home/alvin/Pictures/24top.png
+--WebAppBoundary--

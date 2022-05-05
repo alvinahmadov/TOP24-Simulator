@@ -1,0 +1,47 @@
+{
+	"compilerOptions": {
+		"target": "es2020",
+		"lib": [
+          "es6",
+          "dom"
+        ],
+		"allowJs": true,
+		"outDir": "dist",
+		"rootDir": ".",
+		"baseUrl": "./src",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"rootDirs": [
+			"./src/api",
+			"./src/common",
+			"./src/config",
+			"./src/models",
+			"./src/repositories"
+		],
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"sourceMap": true,
+		"importHelpers": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"strictNullChecks": false,
+		"noImplicitReturns": true,
+		"noImplicitOverride": true,
+		"noStrictGenericChecks": true,
+		"noImplicitAny": true,
+		"noEmitHelpers": true,
+		"types": ["@types/node"]
+	},
+	"include": [
+		"./src/*.ts",
+		"./src/**/*.ts"
+	],
+	"exclude": [
+		"./tmp/*",
+		"./tmp/**/*",
+		"./requests/*",
+		"./requests/**/*",
+	]
+}

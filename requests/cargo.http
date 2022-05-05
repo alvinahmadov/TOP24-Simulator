@@ -1,0 +1,192 @@
+### Legal entity cargo companies
+
+### Request login code for the account
+POST {{host}}/api/cargo/login
+Content-Type: application/json
+
+{
+	"phone": "{{cargo_phone}}"
+}
+
+> {% client.global.set("code", response.body['code']) %}
+
+### Finish login by supplying received code
+POST {{host}}/api/cargo/login
+Content-Type: application/json
+
+{
+	"phone": "{{cargo_phone}}",
+	"code": "{{code}}"
+}
+
+> {%
+	client.global.set("auth_token", response.body['accessToken']);
+	client.global.set("ref_token", response.body['refreshToken']);
+	client.global.set("cargo_id", response.body['cargo']['id']);
+%}
+
+### Refresh access token
+POST {{host}}/api/cargo/refresh
+Authorization: {{ref_token}}
+Content-Type: application/json
+
+### Get list of cargo companies w/o associated models
+GET {{host}}/api/cargo
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get list of cargo companies with associated models
+GET {{host}}/api/cargo?full=true
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get list of cargo companies with specific filter
+GET {{host}}/api/cargo/
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"inn": "000000000000"
+}
+
+### Get single cargo company by providing id of with associated models
+GET {{host}}/api/cargo/{{cargo_id}}?full=true
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get single cargo company by providing id of w/o associated models
+GET {{host}}/api/cargo/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### GET Request
+PUT {{host}}/api/cargo/control
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### GET Request
+GET {{host}}/api/cargo/send/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get list of transports that belong to cargo company
+### that satisfies to physical parameters in body (not required)
+POST {{host}}/api/cargo/transports?from=0&count=10&full=true
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"has_driver": true
+}
+
+### Get list of transports that belong to cargo company
+### that has driver assigned
+POST {{host}}/api/cargo/transports?from=0&count=10&full=true
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"has_driver": true
+}
+
+### Get list of transports that belong to cargo company
+### that has driver assigned
+POST {{host}}/api/cargo/drivers?from=0&count=10
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"order_status": 1
+}
+
+### Register as a new cargo company
+POST {{host}}/api/cargo
+Content-Type: application/json
+
+{
+	"name": "ООО 'Та самая карго'",
+	"shortname": "ТСК",
+	"email": "amadeus.cargo@mail.com",
+	"inn": "7707083893",
+	"kpp": "773601001",
+	"nds": "НДС 20%",
+	"ogpn": "025850",
+	"direction": "Москва",
+	"director": "",
+	"passport_serial_number": "4218 555555",
+	"passport_registration_address": "Москва, 117312, ул. Вавилова, д. 19",
+	"passport_date": 1607724000000,
+	"passport_subdivision_code": "354 354",
+	"passport_issued_by": "УМВД России по Липецкой области",
+	"address_first": "Россия, Москва, 117312, ул. Вавилова, д. 19",
+	"contact_first": "Константинопольский К. К.",
+	"phone": "{{cargo_phone}}",
+	"phone_second": "+7 (435) 435 45 43",
+	"status": 0
+}
+
+> {%
+	client.global.set("auth_token", response.body['accessToken']);
+	client.global.set("ref_token", response.body['refreshToken']);
+	client.global.set("cargo_id", response.body['cargo']['id'])
+	client.global.set("cargo_phone", response.body['cargo']['phone'])
+%}
+
+### Update some information about company
+PUT {{host}}/api/cargo/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"crm_id": null,
+	"phone": "{{cargo_phone}}",
+	"inn": "000000000000",
+	"kpp": "x000f000z000"
+}
+
+### Update cargo company status
+PUT {{host}}/api/cargo/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"status": "new status"
+}
+
+### Delete cargo company
+DELETE {{host}}/api/cargo/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Send passport scan
+POST {{host}}/api/cargo/passport/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="github_PNG20.png"
+
+< /home/alvin/Pictures/github_PNG20.png
+--WebAppBoundary--
+
+### Send passport scan
+POST {{host}}/api/cargo/registr/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="github_PNG20.png"
+
+< /home/alvin/Pictures/github_PNG20.png
+--WebAppBoundary--
+
+### Send passport scan
+POST {{host}}/api/cargo/order/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="github_PNG20.png"
+
+< /home/alvin/Pictures/github_PNG20.png
+--WebAppBoundary--

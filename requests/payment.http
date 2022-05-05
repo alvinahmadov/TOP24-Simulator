@@ -1,0 +1,39 @@
+### GET Request  (  Pays  interfaces  )
+GET {{host}}/api/pay
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### GET Request
+GET {{host}}/api/pay/{{pay_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### POST Request
+POST {{host}}/api/pay
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+    "cargoId": "{{cargo_id}}",
+    "bank": "ПАО “Липецкстройбанкинвест”",
+    "bankid": "869049586",
+    "ogrnip": "ОГПРО0957849385",
+    "rs": "34568987670000000007",
+    "ks": "34568987670000000003"
+}
+
+> {% client.global.set('pay_id', response.body['id']) %}
+
+### PUT Request
+PUT {{host}}/api/pay/{{pay_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+    "bankbik": "123456789"
+}
+
+### DELETE Request
+DELETE {{host}}/api/pay/{{pay_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json

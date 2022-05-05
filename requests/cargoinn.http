@@ -1,0 +1,124 @@
+// Private individual as cargo company
+
+### POST Request
+POST {{host}}/api/cargo/login
+Content-Type: application/json
+
+{
+	"phone": "{{cargoinn_phone}}",
+	"repeat": false
+}
+
+> {% client.global.set("code", response.body['code']) %}
+
+### POST Request
+POST {{host}}/api/cargo/login
+Content-Type: application/json
+
+{
+	"phone": "{{cargoinn_phone}}",
+	"code": "{{code}}"
+}
+
+### Refresh access token
+GET {{host}}/api/cargoinn/refresh
+Authorization: {{ref_token}}
+Content-Type: application/json
+
+### Get list of individual cargo companies (private individuals)
+GET {{host}}/api/cargoinn?full=true
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get single individual cargo company by providing id
+GET {{host}}/api/cargoinn/{{cargo_inn_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### GET Request
+GET {{host}}/api/cargoinn/control
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### GET Request
+GET {{host}}/api/cargoinn/send/{{cargo_inn_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### POST Request
+POST {{host}}/api/cargoinn/transport
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"weight_min": 10,
+	"weight_max": 15
+}
+
+### POST Request
+POST {{host}}/api/cargoinn/register
+Content-Type: application/json
+
+{
+	"surname": "Фамилия",
+	"firstname": "Имя",
+	"lastname": "Отчество",
+	"phone": "{{cargoinn_phone}}"
+}
+
+### PUT Request
+PUT {{host}}/api/cargoinn
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"status": "new status",
+	"level": 5
+}
+
+### PUT Request
+PUT {{host}}/api/cargoinn/status/{{cargo_inn_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"status": "new status"
+}
+
+### DELETE Request
+DELETE {{host}}/api/cargoinn/{{cargo_inn_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Send passport scan
+POST {{host}}/api/cargoinn/passport/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="github_PNG20.png"
+
+< /home/alvin/Pictures/github_PNG20.png
+--WebAppBoundary--
+
+### Send passport scan
+POST {{host}}/api/cargoinn/registration/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="github_PNG20.png"
+
+< /home/alvin/Pictures/github_PNG20.png
+--WebAppBoundary--
+
+### Send passport scan
+POST {{host}}/api/cargoinn/order/{{cargo_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="github_PNG20.png"
+
+< /home/alvin/Pictures/github_PNG20.png
+--WebAppBoundary--

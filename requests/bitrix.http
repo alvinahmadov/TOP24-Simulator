@@ -1,0 +1,34 @@
+### Update cargo data
+
+PUT {{host}}/api/bitrix/cargo/62
+Content-Type: application/json
+
+{
+	"info": "Some information about cargo company",
+	"status": "free",
+	"confirmed": true
+}
+
+### Get bitrix order data
+
+GET {{host}}/api/bitrix/orders
+Content-Type: application/json
+
+### Update bitrix order data
+
+PATCH {{host}}/api/bitrix/orders
+Content-Type: application/json
+
+### Update order data
+
+PUT {{host}}/bitrix/order/162
+Content-Type: application/json
+
+### Delete order
+
+DELETE {{host}}/bitrix/order/162
+Content-Type: application/json
+
+###
+GET https://24top.bitrix24.ru/rest/32/9t0qacmjhn8wurja/crm.contact.fields.json
+Content-Type: application/json

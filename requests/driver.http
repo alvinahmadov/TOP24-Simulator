@@ -1,0 +1,77 @@
+### Get list of drivers
+GET {{host}}/api/driver
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Get single driver by id
+GET {{host}}/api/driver/{{driver_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Create driver account
+POST {{host}}/api/driver
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+	"cargoId": "{{cargo_id}}",
+	"name": "John",
+	"middle_name": "McAlistair",
+	"surname": "Harrison",
+	"phone": "{{driver_phone}}",
+	"license": "32 43 243243",
+	"license_date": "12.12.2020",
+	"longitude": 56.43678,
+	"latitude": 49.24235
+}
+
+> {% client.global.set('driver_id', response.body['id']) %}
+
+### Update driver information
+PUT {{host}}/api/driver/079c30e4-db63-434f-9bdf-10203d7b45d2
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+    "cargoinnId": null
+}
+
+### Update driver status (coordinates and status)
+PUT {{host}}/api/driver/{{driver_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+{
+    "status": 0,
+    "latitude": 55.8462739,
+    "longitude": 45.6371482
+}
+
+### Delete dirver
+DELETE {{host}}/api/driver/{{driver_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### Upload front side of passport scan
+
+POST {{host}}/api/driver/front/{{driver_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="24top.png"
+
+< /home/alvin/Pictures/24top.png
+--WebAppBoundary--
+
+### Upload back side of passport scan
+
+POST {{host}}/api/driver/back/{{driver_id}}
+Authorization: {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="24top.png"
+
+< /home/alvin/Pictures/24top.png
+--WebAppBoundary--

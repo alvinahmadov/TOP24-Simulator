@@ -1,0 +1,32 @@
+### Generate random companies
+POST {{host}}/api/generator/companies
+Content-Type: application/json
+
+{
+	"count": 1,
+	"type": 0
+}
+
+### Generate random drivers
+POST {{host}}/api/generator/drivers
+Content-Type: application/json
+
+{
+	"count": 10
+}
+
+### Generate random orders
+POST {{host}}/api/generator/orders
+Content-Type: application/json
+
+{
+	"count": 15
+}
+
+### Generate random transports
+POST {{host}}/api/generator/transports
+Content-Type: application/json
+
+{
+	"count": 1
+}

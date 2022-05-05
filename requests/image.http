@@ -1,0 +1,14 @@
+### GET Request  (  Images interfaces  )
+GET {{host}}/api/image
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### GET Request
+GET {{host}}/api/image/{{image_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
+
+### DELETE Request
+DELETE {{host}}/image/faculties/{{image_id}}
+Authorization: {{auth_token}}
+Content-Type: application/json
