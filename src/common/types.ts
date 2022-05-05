@@ -216,7 +216,6 @@ export interface IOrder extends IBase {
 	crm_id?: number;
 	title: string;
 	price: float;
-	// TODO(alvin): Refactor name
 	dateAt: Date;
 	number?: number;
 	mileage?: float;
