@@ -1,7 +1,10 @@
 import * as json  from '../json';
 import { ROUTES } from '../api/routes'
 
-export const BASE_URL = 'http://51.250.65.72/api';
+const MODE: number = 1;
+
+export const BASE_URL = MODE == 1 ? 'http://51.250.65.72/api'
+                                  : 'http://localhost:3001/api';
 
 export const ADMIN_HOSTLOGIN = BASE_URL +
                                ROUTES.admin.path +

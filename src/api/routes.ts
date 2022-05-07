@@ -34,6 +34,39 @@ const ACCESS_ADMIN_ONLY: types.IAccessParams = {
 	responseData: RESPONSES['401']
 };
 
+const commonRoute: types.IApiRouteParams = {
+	list:   {
+		path:   '/',
+		method: 'get',
+		guard:  ACCESS_AUTHORIZED
+	},
+	filter: {
+		path:   '/filter',
+		method: 'post',
+		guard:  ACCESS_AUTHORIZED
+	},
+	index:  {
+		path:   '/:id',
+		method: 'get',
+		guard:  ACCESS_AUTHORIZED
+	},
+	create: {
+		path:   '/',
+		method: 'post',
+		guard:  ACCESS_AUTHORIZED
+	},
+	update: {
+		path:   '/:id',
+		method: 'put',
+		guard:  ACCESS_AUTHORIZED
+	},
+	delete: {
+		path:   '/:id',
+		method: 'delete',
+		guard:  ACCESS_AUTHORIZED
+	}
+}
+
 export const ROUTES: types.Routes = {
 	admin:        {
 		path:   '/admin',
@@ -41,6 +74,11 @@ export const ROUTES: types.Routes = {
 			list:       {
 				path:   '/',
 				method: 'get',
+				guard:  ACCESS_ADMIN_ONLY
+			},
+			filter:     {
+				path:   '/filter',
+				method: 'post',
 				guard:  ACCESS_ADMIN_ONLY
 			},
 			index:      {
@@ -66,22 +104,22 @@ export const ROUTES: types.Routes = {
 			login:      {
 				path:   '/login',
 				method: 'post',
-				guard:  ACCESS_FREE
+				guard:  ACCESS_ADMIN_ONLY
 			},
 			refresh:    {
 				path:   '/refresh',
-				method: 'post',
+				method: 'patch',
 				guard:  ACCESS_FREE
 			},
 			host_login: {
 				path:   '/hostlogin',
 				method: 'post',
-				guard:  ACCESS_FREE
+				guard:  ACCESS_ADMIN_ONLY
 			},
 			signin:     {
 				path:   '/signin',
 				method: 'post',
-				guard:  ACCESS_FREE
+				guard:  ACCESS_ADMIN_ONLY
 			}
 		}
 	},
@@ -121,23 +159,12 @@ export const ROUTES: types.Routes = {
 			list:       {
 				path:   '/',
 				method: 'get',
-				guard:  ACCESS_COMPANY
-			},
-			index:      {
-				path:   '/:id',
-				method: 'get',
 				guard:  ACCESS_AUTHORIZED
 			},
-			create:     {
-				path:   '/',
-				method: 'post',
-				guard:  ACCESS_AUTHORIZED
-			},
-			update:     {
-				path:   '/:id',
-				method: 'put',
-				guard:  ACCESS_AUTHORIZED
-			},
+			index:      commonRoute.index,
+			filter:     commonRoute.filter,
+			create:     commonRoute.create,
+			update:     commonRoute.update,
 			delete:     {
 				path:   '/:id',
 				method: 'delete',
@@ -150,8 +177,8 @@ export const ROUTES: types.Routes = {
 			},
 			refresh:    {
 				path:   '/refresh',
-				method: 'post',
-				guard:  ACCESS_AUTHORIZED
+				method: 'patch',
+				guard:  ACCESS_FREE
 			},
 			control:    {
 				path:   '/control',
@@ -160,7 +187,8 @@ export const ROUTES: types.Routes = {
 			},
 			login:      {
 				path:   '/login',
-				method: 'post'
+				method: 'post',
+				guard:  ACCESS_FREE
 			},
 			send:       {
 				path:   '/send/:id',
@@ -200,27 +228,16 @@ export const ROUTES: types.Routes = {
 			list:       {
 				path:   '/',
 				method: 'get',
-				guard:  ACCESS_COMPANY
-			},
-			index:      {
-				path:   '/:id',
-				method: 'get',
 				guard:  ACCESS_AUTHORIZED
 			},
-			update:     {
-				path:   '/:id',
-				method: 'put',
-				guard:  ACCESS_AUTHORIZED
-			},
-			create:     {
-				path:   '/',
-				method: 'post',
-				guard:  ACCESS_AUTHORIZED
-			},
+			index:      commonRoute.index,
+			filter:     commonRoute.filter,
+			update:     commonRoute.update,
+			create:     commonRoute.create,
 			delete:     {
 				path:   '/:id',
 				method: 'delete',
-				guard:  ACCESS_COMPANY
+				guard:  ACCESS_AUTHORIZED
 			},
 			transports: {
 				path:   '/transports',
@@ -229,8 +246,8 @@ export const ROUTES: types.Routes = {
 			},
 			refresh:    {
 				path:   '/refresh',
-				method: 'post',
-				guard:  ACCESS_COMPANY
+				method: 'patch',
+				guard:  ACCESS_FREE
 			},
 			control:    {
 				path:   '/control',
@@ -277,31 +294,12 @@ export const ROUTES: types.Routes = {
 	driver:       {
 		path:   '/driver',
 		routes: {
-			list:   {
-				path:   '/',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			index:  {
-				path:   '/:id',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			update: {
-				path:   '/:id',
-				method: 'put',
-				guard:  ACCESS_AUTHORIZED
-			},
-			create: {
-				path:   '/',
-				method: 'post',
-				guard:  ACCESS_AUTHORIZED
-			},
-			delete: {
-				path:   '/:id',
-				method: 'delete',
-				guard:  ACCESS_AUTHORIZED
-			},
+			list:   commonRoute.list,
+			index:  commonRoute.index,
+			filter: commonRoute.filter,
+			create: commonRoute.create,
+			update: commonRoute.update,
+			delete: commonRoute.delete,
 			status: {
 				path:   '/:id',
 				method: 'patch',
@@ -315,7 +313,7 @@ export const ROUTES: types.Routes = {
 			back:   {
 				path:   '/back/:id',
 				method: 'post',
-				guard:  ACCESS_AUTHORIZED,
+				guard:  ACCESS_AUTHORIZED
 			}
 		}
 	},
@@ -347,56 +345,23 @@ export const ROUTES: types.Routes = {
 	image:        {
 		path:   '/image',
 		routes: {
-			list:   {
-				path:   '/',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			index:  {
-				path:   '/:id',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			delete: {
-				path:   '/:id',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			}
+			list:   commonRoute.list,
+			filter: commonRoute.filter,
+			index:  commonRoute.index,
+			delete: commonRoute.delete
 		}
 	},
 	order:        {
 		path:   '/order',
 		routes: {
-			list:     {
-				path:   '/',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			index:    {
-				path:   '/:id',
-				method: 'get',
-				guard:  {
-					compareMode:  0, op: 'gt',
-					responseData: RESPONSES['403']
-				}
-			},
-			create:   {
-				path:   '/',
-				method: 'post',
-				guard:  ACCESS_AUTHORIZED
-			},
-			update:   {
-				path:   '/:id',
-				method: 'put',
-				guard:  ACCESS_AUTHORIZED,
-			},
-			delete:   {
-				path:   '/:id',
-				method: 'delete',
-				guard:  ACCESS_AUTHORIZED
-			},
+			list:     commonRoute.list,
+			index:    commonRoute.index,
+			filter:   commonRoute.filter,
+			create:   commonRoute.create,
+			update:   commonRoute.update,
+			delete:   commonRoute.delete,
 			cargos:   {
-				path:   '/cargolist/:id',
+				path:   '/cargolist/:cargoId',
 				method: 'get',
 				guard:  ACCESS_AUTHORIZED
 			},
@@ -430,29 +395,11 @@ export const ROUTES: types.Routes = {
 	order_driver: {
 		path:   '/order_association',
 		routes: {
-			list:        {
-				path:   '/',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			index:       {
-				path:   '/:id',
-				method: 'get',
-				guard:  {
-					compareMode:  0, op: 'gt',
-					responseData: RESPONSES['403']
-				}
-			},
-			update:      {
-				path:   '/:id',
-				method: 'put',
-				guard:  ACCESS_AUTHORIZED,
-			},
-			delete:      {
-				path:   '/:id',
-				method: 'delete',
-				guard:  ACCESS_AUTHORIZED
-			},
+			list:        commonRoute.list,
+			index:       commonRoute.index,
+			filter:      commonRoute.filter,
+			update:      commonRoute.update,
+			delete:      commonRoute.delete,
 			assign:      {
 				path:   '/:orderId/:driverId',
 				method: 'post',
@@ -460,7 +407,17 @@ export const ROUTES: types.Routes = {
 			},
 			association: {
 				path:   '/:orderId/:driverId',
-				method: 'get',
+				method: 'post',
+				guard:  ACCESS_AUTHORIZED
+			},
+			accept:      {
+				path:   '/accept/:orderId/:driverId',
+				method: 'patch',
+				guard:  ACCESS_AUTHORIZED
+			},
+			decline:     {
+				path:   '/decline/:orderId/:driverId',
+				method: 'patch',
 				guard:  ACCESS_AUTHORIZED
 			},
 			assignList:  {
@@ -470,12 +427,12 @@ export const ROUTES: types.Routes = {
 			},
 			order:       {
 				path:   '/order/:orderId',
-				method: 'get',
+				method: 'post',
 				guard:  ACCESS_AUTHORIZED
 			},
 			driver:      {
 				path:   '/driver/:driverId',
-				method: 'get',
+				method: 'post',
 				guard:  ACCESS_AUTHORIZED
 			},
 			driverUpd:   {
@@ -485,12 +442,7 @@ export const ROUTES: types.Routes = {
 			},
 			transport:   {
 				path:   '/transport/:orderId',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			cancel:      {
-				path:   '/cancel/:id',
-				method: 'patch',
+				method: 'post',
 				guard:  ACCESS_AUTHORIZED
 			},
 			contract:    {
@@ -503,31 +455,12 @@ export const ROUTES: types.Routes = {
 	pay:          {
 		path:   '/pay',
 		routes: {
-			list:   {
-				path:   '/',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			index:  {
-				path:   '/:id',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			create: {
-				path:   '/',
-				method: 'post',
-				guard:  ACCESS_AUTHORIZED
-			},
-			update: {
-				path:   '/:id',
-				method: 'put',
-				guard:  ACCESS_AUTHORIZED
-			},
-			delete: {
-				path:   '/:id',
-				method: 'delete',
-				guard:  ACCESS_AUTHORIZED
-			}
+			list:   commonRoute.list,
+			index:  commonRoute.index,
+			filter: commonRoute.filter,
+			create: commonRoute.create,
+			update: commonRoute.update,
+			delete: commonRoute.delete
 		}
 	},
 	reference:    {
@@ -535,67 +468,42 @@ export const ROUTES: types.Routes = {
 		routes: {
 			address:       {
 				path:   '/address/:id',
-				method: 'get',
-				guard:  ACCESS_FREE
+				method: 'get'
 			},
 			addresses:     {
 				path:   '/address',
-				method: 'get',
-				guard:  ACCESS_FREE
+				method: 'get'
 			},
 			payloads:      {
 				path:   '/payloads',
-				method: 'get',
-				guard:  ACCESS_FREE
+				method: 'get'
 			},
 			risk_classes:  {
 				path:   '/risk_classes',
-				method: 'get',
-				guard:  ACCESS_FREE
+				method: 'get'
 			},
 			loading_types: {
 				path:   '/loading_types',
-				method: 'get',
-				guard:  ACCESS_FREE
+				method: 'get'
 			},
 			auto_types:    {
 				path:   '/auto_types',
-				method: 'get',
-				guard:  ACCESS_FREE
+				method: 'get'
 			}
 		}
 	},
 	transport:    {
 		path:   '/transport',
 		routes: {
-			list:   {
-				path:   '/',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			index:  {
-				path:   '/:id',
-				method: 'get',
-				guard:  ACCESS_AUTHORIZED
-			},
-			create: {
-				path:   '/',
-				method: 'post',
-				guard:  ACCESS_AUTHORIZED
-			},
-			update: {
-				path:   '/:id',
-				method: 'put',
-				guard:  ACCESS_AUTHORIZED
-			},
-			delete: {
-				path:   '/:id',
-				method: 'delete',
-				guard:  ACCESS_AUTHORIZED
-			},
+			list:   commonRoute.list,
+			index:  commonRoute.index,
+			filter: commonRoute.filter,
+			create: commonRoute.create,
+			update: commonRoute.update,
+			delete: commonRoute.delete,
 			driver: {
-				path:   '/driver/:id',
-				method: 'get',
+				path:   '/driver/:driverId',
+				method: 'post',
 				guard:  ACCESS_AUTHORIZED
 			},
 			image:  {

@@ -74,14 +74,32 @@ export function formatUrl(url: string, argObject?: any) {
 	return url;
 }
 
-export async function test(testMethod: (...args: any[]) => any) {
+export async function test(testMethod: (...args: any[]) => any, ...args: any[]) {
+	let result: any;
 	try {
-		await testMethod();
+		result = await testMethod(...args);
+		console.debug(result);
 	} catch(e) {
 		console.error(e);
 	}
+	return result;
+}
 
-	console.debug('Success!');
+export async function tests(testList: Array<{ func: (...args: any[]) => any; args?: any[] }>): Promise<void> {
+	let result: any;
+	for(let i = 0; i < testList.length; ++i) {
+		console.debug(`######################## TEST ${i + 1} ########################`);
+		if(testList[i].args) {
+			result = await test(testList[i].func, ...testList[i].args);
+		}
+		else {
+			result = await test(testList[i].func);
+		}
+		if(!!result)
+			console.debug(`######################## TEST ${i + 1} PASSED ########################`);
+		else
+			console.debug(`######################## TEST ${i + 1} FAILED ########################`);
+	}
 }
 
 export namespace Http {
@@ -91,18 +109,26 @@ export namespace Http {
 		data?: any,
 		config?: AxiosRequestConfig
 	): Promise<R> {
+		console.debug({ url, method, data, config })
+		let result: any;
 		switch(method) {
 			case "post":
-				return post<R>(url, data, config);
+				result = await post<R>(url, data, config);
+				break;
 			case "get":
-				return get<R>(url, config);
+				result = await get<R>(url, config);
+				break;
 			case "put":
-				return put<R>(url, data, config);
+				result = await put<R>(url, data, config);
+				break;
 			case "patch":
-				return patch<R>(url, data, config);
+				result = await patch<R>(url, data, config);
+				break;
 			case "delete":
-				return del<R>(url, config);
+				result = await del<R>(url, config);
+				break;
 		}
+		return result;
 	}
 
 	export async function post<T = any, R = any>(url: string, data?: any, config?: AxiosRequestConfig) {
