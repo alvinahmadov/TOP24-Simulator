@@ -1,32 +1,35 @@
-import faker                      from '@faker-js/faker';
-import * as enums                 from './common/enums';
-import * as types                 from './common/types';
-import { randomFrom, test }       from './common/functions';
-import { getDrivers }             from './api/driver';
-import { getOrders, updateOrder } from './api/order';
-import { updateTransport }        from './api/transports';
-import {
-	assignDrivers,
-	getTransports,
-	getAssociations,
-}                                 from './api/orderAssociation';
+// noinspection JSUnusedLocalSymbols
+
+import faker                 from '@faker-js/faker';
+import * as api              from './api';
+import * as enums            from './common/enums';
+import * as types            from './common/types';
+import * as filters          from './common/filters';
+import { randomFrom, tests } from './common/functions';
 
 const DEBUG = false;
 
-const testAssociations = async() =>
+const testAssociations = async(filters?: filters.IOrderAssociationFilter) =>
 {
-	const associations = await getAssociations();
+	const associations = await api.getAssociations(null, filters);
 	if(DEBUG)
-		console.debug(associations)
+		console.debug(associations);
+
+	return associations;
+}
+
+const testCreateCargo = async() =>
+{
+
 }
 
 const testAssociationTransport = async() =>
 {
-	const associations = await getAssociations();
+	const associations = await api.getAssociations();
 	// Select random order
 	const orderId = faker.helpers.arrayElement(associations).orderId;
 	// Select transports which: 1. available to use, 2. driver accepted order
-	const transports = await getTransports(orderId, { transport_status: 1, order_status: 1 });
+	const transports = await api.getAssociationTransports(orderId, { transport_status: 1, order_status: 1 });
 	if(DEBUG)
 		console.debug(transports);
 
@@ -36,10 +39,10 @@ const testAssociationTransport = async() =>
 const testAssignDrivers = async(order?: types.IOrder) =>
 {
 	if(!order)
-		order = faker.helpers.arrayElement(await getOrders());
+		order = faker.helpers.arrayElement(await api.getOrders());
 	// First delete existing by setting drivers to null
-	await assignDrivers(order.id, { drivers: null });
-	const drivers = await getDrivers();
+	await api.assignDrivers(order.id, { drivers: null });
+	const drivers = await api.getDrivers();
 	// Get random unique drivers from 4 to 6, and assume
 	// that the driver is suitable for order parameters
 	const selectedDrivers = faker.helpers.uniqueArray(
@@ -47,7 +50,7 @@ const testAssignDrivers = async(order?: types.IOrder) =>
 		faker.datatype.number({ min: 4, max: 6 })
 	);
 	// Send associations with random status for selected order and drivers
-	const result = await assignDrivers(order.id, {
+	const result = await api.assignDrivers(order.id, {
 		drivers: selectedDrivers.map(d => ({
 			driverId:     d.id,
 			order_status: faker.helpers.arrayElement([
@@ -63,6 +66,14 @@ const testAssignDrivers = async(order?: types.IOrder) =>
 	return result;
 }
 
+const testDriverTransports = async(filter?: filters.ITransportFilter) =>
+{
+	//Get random driver with full data to get it's transports
+	const driver = faker.helpers.arrayElement(await api.getDrivers(null, { full: true }));
+	// Get driver's transports
+	return api.getDriverTransports(driver.id, filter, { full: true });
+}
+
 /**
  * Reset statuses of transports and set one of them as active
  * */
@@ -71,7 +82,7 @@ const resetTransportStatuses = async(
 ): Promise<types.ITransport[]> =>
 {
 	if(!drivers)
-		drivers = await getDrivers({}, { full: true }) as
+		drivers = await api.getDrivers({}, { full: true }) as
 			(types.IDriver & { transports: types.ITransport[] })[];
 
 	const result: types.ITransport[] = [];
@@ -82,7 +93,7 @@ const resetTransportStatuses = async(
 			// Select random transport for status change
 			const luckyIndex = randomFrom(transports.length);
 			for(let i = 0; i < transports.length; ++i) {
-				updateTransport(transports[i].id, {
+				api.updateTransport(transports[i].id, {
 					// Index matches for lucky index so the transport
 					// is set as main. In real only one transport can be
 					// set as currently active. Other either may be used or
@@ -106,10 +117,10 @@ const resetTransportStatuses = async(
 const simulateAdminLogic = async() =>
 {
 	// Get orders
-	const orders = await getOrders();
+	const orders = await api.getOrders();
 	// Get drivers with `full` query parameter set to true
 	// which in turn will return driver and his transports.
-	const drivers = await getDrivers({}, { full: true }) as
+	const drivers = await api.getDrivers({}, { full: true }) as
 		(types.IDriver & { transports: types.ITransport[] })[];
 	//Select random order from orders
 	let order = faker.helpers.arrayElement(orders);
@@ -124,9 +135,9 @@ const simulateAdminLogic = async() =>
 	// Get drivers that ready to execute order and select one of them
 	// No need for `full` query it will return with associated models
 	// such as driver, cargo or cargoinn
-	const driverData = await getTransports(order.id, {
+	const driverData = await api.getAssociationTransports(order.id, {
 		// Get only accepted ones
-		order_status:     enums.OrderStatus.ACCEPTED,
+		order_status: enums.OrderStatus.ACCEPTED,
 		// Get transports only which driver selected as main/default
 		transport_status: enums.TransportStatus.ACTIVE
 	}) as (types.ITransport & {
@@ -139,15 +150,15 @@ const simulateAdminLogic = async() =>
 	console.debug('Selected by admin/owner driver: ', { driverData, selected })
 
 	// Then accept driver for order
-	order = await updateOrder(order.id, {
+	order = await api.updateOrder(order.id, {
 		// Driver's company
-		cargoId:    selected.driver.cargoId,
+		cargoId: selected.driver.cargoId,
 		// Driver's individual company
 		cargoinnId: selected.driver.cargoinnId,
 		// Driver that executes the order
-		driverId:   selected.driverId,
+		driverId: selected.driverId,
 		// Order is implemented by driver at the moment
-		status:     enums.OrderStatus.PROCESSING,
+		status: enums.OrderStatus.PROCESSING,
 		// Here we copy contract document link from
 		// association to order.
 		// contract_link: association.contract_link,
@@ -158,6 +169,17 @@ const simulateAdminLogic = async() =>
 	});
 
 	console.debug('Selected order: ', { order });
+
+	const assignedOrders = await api.getOrders({ is_open: false, is_free: false, is_canceled: false }, { full: true });
+
+	console.debug('Assigned to driver orders', { assignedOrders });
 }
 
-test(simulateAdminLogic);
+const choice = faker.datatype.boolean();
+
+tests([
+	      { func: testDriverTransports, args: [{ status: enums.TransportStatus.ACTIVE }] },
+	      { func: choice ? api.getCompanies : api.getInnCompanies },
+	      { func: api.getOrders, args: [{ is_open: true }, { full: true }] }
+      ])
+	.catch(reason => console.warn(reason));
